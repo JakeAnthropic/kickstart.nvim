@@ -54,7 +54,7 @@ if not vim.loop.fs_stat(lazypath) then
     'clone',
     '--filter=blob:none',
     'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
+    '--branch=v10.16.0', -- latest stable release
     lazypath,
   }
 end
@@ -70,11 +70,11 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   -- Git related plugins
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+  -- 'tpope/vim-fugitive',
+  -- 'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  -- 'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -88,32 +88,34 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      -- { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
 
-  {
+  -- TODO(jake): I think I want this but it can be ignored for now
+  --{
     -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = {
+    -- 'hrsh7th/nvim-cmp',
+    -- dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+      -- 'L3MON4D3/LuaSnip',
+      -- 'saadparwaiz1/cmp_luasnip',
 
+      -- TODO(jake): I think I actually want this
       -- Adds LSP completion capabilities
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
+      -- 'hrsh7th/cmp-nvim-lsp',
+      -- 'hrsh7th/cmp-path',
 
       -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
-    },
-  },
+      -- 'rafamadriz/friendly-snippets',
+  --  },
+  --},
 
-  -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  --[[ Useful plugin to show you pending keybinds.
+  -- { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -188,7 +190,7 @@ require('lazy').setup({
       end,
     },
   },
-
+  --]]
   {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
@@ -198,6 +200,7 @@ require('lazy').setup({
     end,
   },
 
+  --[[
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -211,7 +214,8 @@ require('lazy').setup({
       },
     },
   },
-
+  --]]
+  --[[
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -220,11 +224,12 @@ require('lazy').setup({
     main = 'ibl',
     opts = {},
   },
+  --]]
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
-  -- Fuzzy Finder (files, lsp, etc)
+  --[[ Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
@@ -244,6 +249,7 @@ require('lazy').setup({
       },
     },
   },
+  --]]
 
   {
     -- Highlight, edit, and navigate code
@@ -339,7 +345,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
+--[[require('telescope').setup {
+	
   defaults = {
     mappings = {
       i = {
@@ -349,12 +356,12 @@ require('telescope').setup {
     },
   },
 }
-
+--]]
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+--pcall(require('telescope').load_extension, 'fzf')
 
 -- Telescope live_grep in git root
--- Function to find the git root directory based on the current buffer's path
+--[[ Function to find the git root directory based on the current buffer's path
 local function find_git_root()
   -- Use the current buffer's path as the starting point for the git search
   local current_file = vim.api.nvim_buf_get_name(0)
@@ -387,12 +394,12 @@ local function live_grep_git_root()
   end
 end
 
-vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
+--vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
+--vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+--vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+--vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
@@ -416,6 +423,7 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+--]]
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -537,6 +545,7 @@ local on_attach = function(_, bufnr)
 end
 
 -- document existing key chains
+--[[
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
@@ -553,6 +562,7 @@ require('which-key').register({
   ['<leader>'] = { name = 'VISUAL <leader>' },
   ['<leader>h'] = { 'Git [H]unk' },
 }, { mode = 'v' })
+--]]
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -568,6 +578,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
+  -- TODO(jake): Add language server for python
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
@@ -589,8 +600,8 @@ local servers = {
 require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+--local capabilities = vim.lsp.protocol.make_client_capabilities()
+--capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
@@ -612,11 +623,12 @@ mason_lspconfig.setup_handlers {
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
-local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
+--local cmp = require 'cmp'
+--local luasnip = require 'luasnip'
+--require('luasnip.loaders.from_vscode').lazy_load()
+--luasnip.config.setup {}
 
+--[[
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -661,6 +673,6 @@ cmp.setup {
     { name = 'path' },
   },
 }
-
+--]]
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
